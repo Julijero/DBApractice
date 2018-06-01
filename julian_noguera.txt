@@ -1,0 +1,42 @@
+plsql.execute <<-SQL
+ create or replace procedure CALCULAR_SIMULACION (tasa_anual decimal,total_cuotas integer,valor_prestamo decimal) as
+i number;
+
+tasa_nominal_mensual decimal(15,4);
+cuota_mensual decimal(15,2);
+n decimal(15,4) := 0;
+d decimal(15,4) :=0;
+abono_interes decimal(15,2):=0;
+abono_capital decimal(15,2):=0;
+saldo decimal(15,2):=0;
+begin 
+
+dbms_output.put_line('tasa: '||tasa_anual);
+dbms_output.put_line('tasa: '||total_cuotas);
+dbms_output.put_line('tasa: '||valor_prestamo);
+tasa_nominal_mensual := (1 + (tasa_anual / 100)) ** (30 / 360) - 1;
+n := tasa_nominal_mensual * valor_prestamo;
+d := 1-(1+ tasa_nominal_mensual)**(-total_cuotas);
+cuota_mensual := n/d;
+saldo := valor_prestamo;
+for i in 1..total_cuotas loop
+    abono_interes:=tasa_nominal_mensual*valor_prestamo;
+    abono_capital:=cuota_mensual-abono_interes;
+    saldo := saldo-abono_capital;
+    dbms_output.put_line(abono_interes||' - '||abono_capital||' = '||saldo);
+    
+    insert into AMORTIZACION(numero_cuota,cuota_mensual,abono_capital,abono_interes,saldo)values(i,cuota_mensual,abono_capital,abono_interes,saldo);
+    
+end loop;
+
+end
+SQL
+
+plsql.execute <<-SQL
+ Codigo va acá
+SQL
+
+plsql.execute <<-SQL
+ Codigo va acá
+SQL++
+
