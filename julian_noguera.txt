@@ -33,7 +33,18 @@ end
 SQL
 
 plsql.execute <<-SQL
- Codigo va acá
+create function FIND_OUTLIER() return number_array is
+begin 
+ 
+    arreglo := number_array(2, 4, 0, 100, 4, 11, 2602, 36); 
+    countarreglo := arreglo.count;
+    for i in 1..countarreglo loop
+        if mod(arreglo(i),2)=1 then 
+            return arreglo(i);
+              dbms_output.put_line('devolve un numero par del arreglo'||arreglo(i));
+            end if;
+    end loop;
+end
 SQL
 
 plsql.execute <<-SQL
